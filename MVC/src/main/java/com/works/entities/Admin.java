@@ -3,13 +3,18 @@ package com.works.entities;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Data
-public class User {
+@Entity
+public class Admin {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uid;
 
     @NotNull
     @NotEmpty
@@ -19,9 +24,9 @@ public class User {
 
     @NotNull
     @NotEmpty
-    @Length(min=3, max = 10)
     private String password;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusType status;
 
 }

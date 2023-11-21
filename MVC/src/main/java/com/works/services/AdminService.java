@@ -14,19 +14,25 @@ public class AdminService {
 
     final DB db;
     final HttpServletRequest req;
+    final TinkEncDec tinkEncDec;
 
     public boolean adminLogin(Admin admin) {
         boolean status = false;
         try {
-            String sql = "select * from admin where email = ? and password = ?";
+            String sql = "select * from admin where email = ?";
             PreparedStatement st = db.dataSource().getConnection().prepareStatement(sql);
             st.setString(1, admin.getEmail());
-            st.setString(2, admin.getPassword());
             ResultSet rs = st.executeQuery();
             status = rs.next();
             if (status) {
-                admin.setUid( rs.getLong("uid") );
-                req.getSession().setAttribute("admin", admin);
+                String cipherText = rs.getString("password");
+                String plainPass = tinkEncDec.decrypt(cipherText);
+                if ( plainPass.equals(admin.getPassword()) ) {
+                    admin.setUid( rs.getLong("uid") );
+                    req.getSession().setAttribute("admin", admin);
+                }else {
+                    status = false;
+                }
             }
         }catch (Exception ex) {
             System.err.println("Login Error: " + ex);

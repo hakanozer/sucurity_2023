@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Data
-public class Note {
+public class Note extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,8 @@ public class Note {
     @NotEmpty
     @NotNull
     private String detail;
+
+
 
 
 }
